@@ -51,7 +51,7 @@ public class SolutionPopulation {
 	 * @return the best candidate solution in this population
 	 */
 	public CandidateSolution getBestSolution() {
-		return Collections.max(solutions);
+		return Collections.min(solutions);
 	}
 
 	/**

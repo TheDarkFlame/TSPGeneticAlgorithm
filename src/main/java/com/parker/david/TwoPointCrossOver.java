@@ -1,6 +1,7 @@
 package com.parker.david;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -32,7 +33,7 @@ public class TwoPointCrossOver implements PopulationCrossover {
 		Integer rand;
 		do {
 			rand = randomNumberGenerator.nextInt(highestPossibleValue + 1 - lowestPossibleValue) + lowestPossibleValue;
-		} while (!rand.equals(blacklistedNumber));
+		} while (rand.equals(blacklistedNumber));
 		return rand;
 	}
 
@@ -98,19 +99,40 @@ public class TwoPointCrossOver implements PopulationCrossover {
 			crossover1 = temp;
 		}
 
+
 		//offspring1=parent1 with the middle from parent2, vica versa
 		//do this in a for loop
-		CandidateSolution offspring1 = parent1.copy();
-		CandidateSolution offspring2 = parent2.copy();
-		for (int i = crossover1; i < crossover2; ++i) {
-			offspring1.getCities().set(i, parent2.getCities().get(i));
-			offspring2.getCities().set(i, parent1.getCities().get(i));
+		ArrayList<City> parent1_cities = parent1.getCities();
+		ArrayList<City> parent2_cities = parent2.getCities();
+
+		// extract middle from the first parent
+		ArrayList<City> offspring1_parent1cities = new ArrayList<>(parent1_cities.subList(crossover1, crossover2));
+		ArrayList<City> offspring2_parent2cities = new ArrayList<>(parent2_cities.subList(crossover1, crossover2));
+
+		// create our offspring city permutation
+		ArrayList<City> offspring1 = new ArrayList<>();
+		ArrayList<City> offspring2 = new ArrayList<>();
+
+		int count = parent2.cityCount();
+		for (int i = crossover2; i < crossover2 + count; i++) {
+			//if the offspring will not get this city from the first parent, add the city from the second parent
+			if (!offspring1_parent1cities.contains(parent2_cities.get(i % count)))
+				offspring1.add(parent2_cities.get(i % count));
+			if (!offspring2_parent2cities.contains(parent1_cities.get(i % count)))
+				offspring2.add(parent1_cities.get(i % count));
+
+			//if we are at the end of the arraylist, and about to loop back around, add in all the cities from the first parent
+			if (i == count - 1) {
+				offspring1.addAll(offspring1_parent1cities);
+				offspring2.addAll(offspring2_parent2cities);
+			}
 		}
+
 
 		//return the offspring
 		ArrayList<CandidateSolution> offspring = new ArrayList<>();
-		offspring.add(offspring1);
-		offspring.add(offspring2);
+		offspring.add(new CandidateSolution(offspring1));
+		offspring.add(new CandidateSolution(offspring2));
 
 		//add the parents for family
 		ArrayList<CandidateSolution> parents = new ArrayList<>();

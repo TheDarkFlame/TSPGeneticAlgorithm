@@ -1,6 +1,7 @@
 package com.parker.david;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -33,6 +34,9 @@ public class RandomGeneration implements PopulationInitialiser {
 		for (int i = 0; i < populationSize; i++) {
 			solutions.add(generateSolution(cities));
 		}
+
+		//sort the solutions by fitness so they are easier to read on the printout
+		Collections.sort(solutions);
 
 		//return a population containing the array list of solutions
 		return new SolutionPopulation(solutions);

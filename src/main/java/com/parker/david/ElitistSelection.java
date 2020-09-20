@@ -23,7 +23,7 @@ public class ElitistSelection implements PopulationReplacement {
 		allSolutions.addAll(offspring.getSolutions());
 
 		//sort solutions (based on fitness, as implemented in CandidateSolution)
-		allSolutions.sort(Collections.reverseOrder());
+		Collections.sort(allSolutions);
 
 		//using the size of the original population, select a new population (based on them being ordered by fitness)
 		ArrayList<CandidateSolution> bestSolutions = new ArrayList<>(allSolutions.subList(0, parents.getPopulationSize()));

@@ -34,7 +34,7 @@ public class SwapTwoCities implements PopulationMutator {
 		SolutionPopulation mutatedPopulation = unmutatedPopulation.copy();
 
 		//randomly pick a solution to mutate
-		int solutionToMutate = randomNumberGenerator.nextInt(mutatedPopulation.getPopulationSize()) + 1;
+		int solutionToMutate = randomNumberGenerator.nextInt(mutatedPopulation.getPopulationSize());
 
 		//mutate the solution
 		CandidateSolution mutated = mutateSolution(mutatedPopulation.getSolutions().get(solutionToMutate));
@@ -70,10 +70,10 @@ public class SwapTwoCities implements PopulationMutator {
 		CandidateSolution mutatedSolution = unmutatedSolution.copy();
 
 		//randomly select two cities
-		int city1 = randomNumberGenerator.nextInt(mutatedSolution.cityCount()) + 1;
+		int city1 = randomNumberGenerator.nextInt(mutatedSolution.cityCount());
 		int city2;
 		do {
-			city2 = randomNumberGenerator.nextInt(mutatedSolution.cityCount()) + 1;
+			city2 = randomNumberGenerator.nextInt(mutatedSolution.cityCount());
 		} while (city1 == city2);
 
 		//swap those cities

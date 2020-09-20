@@ -171,20 +171,32 @@ public class GAPopulationGeneration {
 
 	public void addToTable(AsciiTable table, CandidateSolution incumbent) {
 
+		//print the header
+		table.addRow("parent", "parent fitness", "final offspring", "offspring parents", "mutation", "final selected", "fitness");
+
+		//for each element of the popluation
 		for (int i = 0; i < parentPopulation.getPopulationSize(); i++) {
+			//grab the final offspring (post crossover and mutation)
 			CandidateSolution offspring = mutatedPopulation.getSolutions().get(i);
-			String parentRecord = familyRecords.stream()
-					.map(familyRecord -> familyRecord.parentsIfOffspringMatches(offspring))
-					.collect(Collectors.joining(""));
+
+			//check if the offspring was mutated
 			String mutationRecord = mutantRecords.stream()
-					.map(mutantRecord -> mutantRecord.mutatedIfUnmutatedMatches(offspring))
+					.map(mutantRecord -> mutantRecord.unmutatedIfMutatedMatches(offspring))
 					.collect(Collectors.joining(""));
 
-			table.addRow(generationNumber,
+			//if mutation exists, we look for the original unmutated offspring as the lookup
+			CandidateSolution parentRecordLookup = (!mutationRecord.isEmpty()) ? mutantRecords.get(0).getUnmutated() : offspring;
+
+			//output get the parents
+			String parentRecord = familyRecords.stream()
+					.map(familyRecord -> familyRecord.parentsIfOffspringMatches(parentRecordLookup))
+					.collect(Collectors.joining(""));
+
+			//add a row to the table
+			table.addRow(
 					parentPopulation.getSolutions().get(i),
 					parentPopulation.getSolutions().get(i).getFitness(),
 					offspring,
-					offspring.getFitness(),
 					parentRecord,
 					mutationRecord,
 					nextPopulation.getSolutions().get(i),
@@ -192,37 +204,11 @@ public class GAPopulationGeneration {
 			);
 		}
 		table.addLightRule();
-		table.addRow(null, null, "mean population fitness:" + meanFitness,
-				null, null, "incumbent:" + incumbent,
-				null, "incumbent fitness: " + incumbent.getFitness()
+		table.addRow("generation: " + generationNumber,
+				null, "incumbent: " + incumbent,
+				"mean population fitness: " + meanFitness,
+				null, null, "incumbent fitness: " + incumbent.getFitness()
 		);
 		table.addRule();
-
-
-		//build string in the following way:
-		/*
-		    ---heavy rule---
-		  generation # | parents | parent fitness | final offspring | parent set | mutation | final selected | fitness
-		    ---rule
-			..                                                          /empty if not mutated\
-			..
-			..
-			..
-			..
-			..
-			---light rule---
-			incumbent + incumbent fitness  + mean fitness
-			---rule---
-			..
-			..
-			..
-			..
-			..
-			..
-			---light rule---
-			incumbent + incumbent fitness  + mean fitness
-			---heavy rule---
-		 */
-
 	}
 }

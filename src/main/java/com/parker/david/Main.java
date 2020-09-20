@@ -52,31 +52,28 @@ public class Main {
 
 		// create our output table
 		AsciiTable outputTable = new AsciiTable();
-		outputTable.addRow("generation", "parents", "parent fitness", "final offspring", "parent set", "mutation", "final selected", "fitness");
+		outputTable.addRule();
 
 		// create our incumbent and stopping criterion tracker
 		CandidateSolution incumbent = generation.getParentPopulation().getBestSolution();
 		int generationSinceImprovedIncumbent = 0;
 
 		//loop until 10 iterations without improved incumbent
-		while (generationSinceImprovedIncumbent < 10) {
+		while (generationSinceImprovedIncumbent <= 10) {
 
 			//take parents and crossover to create offspring. record the results for displaying later
-			System.out.println("computing offspring");
 			generation.setOffspringPopulation(breeder.breed(generation.getParentPopulation()));
 			generation.setFamilyRecords(breeder.getFamilies());
 
 			//take offspring and perform mutation. record the results for displaying later
-			System.out.println("computing mutations");
 			generation.setMutatedPopulation(mutator.mutatePopulation(generation.getOffspringPopulation()));
 			generation.setMutantRecords(mutator.getMutations());
 
 			//take mutated offspring and perform selection.
-			System.out.println("computing next generation");
 			generation.setNextPopulation(selector.replace(generation.getParentPopulation(), generation.getMutatedPopulation()));
 
 			//if this solution is greater than the incumbent reset stopping criterion and we have new incumbent, else increment stopping criterion
-			if (generation.getBestSolutionThisGeneration().compareTo(incumbent) > 0) {
+			if (generation.getBestSolutionThisGeneration().compareTo(incumbent) < 0) {
 				generationSinceImprovedIncumbent = 0;
 				incumbent = generation.getBestSolutionThisGeneration();
 			} else

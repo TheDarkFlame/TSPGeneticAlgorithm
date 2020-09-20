@@ -6,6 +6,15 @@ package com.parker.david;
  */
 public class MutantRecord {
 	/**
+	 * getter for the underlying unmutated (original) solution
+	 *
+	 * @return an unmutated solution
+	 */
+	public CandidateSolution getUnmutated() {
+		return unmutated;
+	}
+
+	/**
 	 * internal structure to record the unmutated (original) solution
 	 */
 	private CandidateSolution unmutated;
@@ -32,8 +41,8 @@ public class MutantRecord {
 	 * @param matchSolution the unmutated solution we want to match
 	 * @return a string indicating the mutation (if any) of the match solution
 	 */
-	public String mutatedIfUnmutatedMatches(CandidateSolution matchSolution) {
-		if (matchSolution.equals(unmutated))
+	public String unmutatedIfMutatedMatches(CandidateSolution matchSolution) {
+		if (matchSolution.equals(mutated))
 			return unmutated + "->" + mutated;
 		else
 			return "";
