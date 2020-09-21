@@ -205,9 +205,9 @@ public class GAPopulationGeneration {
 		}
 		table.addLightRule();
 		table.addRow("generation: " + generationNumber,
-				null, "incumbent: " + incumbent,
-				"incumbent fitness: " + incumbent.getFitness(),
-				null, "mean population fitness: " + meanFitness,""
+				"", "incumbent: " + incumbent,
+				"incumbent fitness: " + incumbent.getFitness()
+				, "mean fitness: " + meanFitness, "", ""
 
 		);
 		table.addRule();

@@ -95,12 +95,11 @@ public class Main {
 		}
 
 		//print out the incumbent at the end
-		outputTable.addRow(null, null, null, null, null, null, "TSP final best solution & fitness : " + incumbent + " (" + incumbent.getFitness() + ")");
+		outputTable.addRow("", "", "TSP final best solution & fitness : ", incumbent + " (" + incumbent.getFitness() + ")","", "", "");
 		outputTable.addHeavyRule();
 
 
 		//format the table, and print to console and output.txt
-		outputTable.getRenderer().setCWC(new CWC_LongestLine());
 		TA_Grid grid = TA_Grid.create("an ascii compliant grid")
 				.addCharacterMap(TA_GridConfig.RULESET_HEAVY, ' ', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
 				.addCharacterMap(TA_GridConfig.RULESET_NORMAL, ' ', '~', ' ', '~', '~', '~', '~', '~', '~', '~', '~', '~')
@@ -109,6 +108,7 @@ public class Main {
 		outputTable.setPaddingLeft(1);
 		outputTable.setPaddingRight(1);
 		outputTable.setTextAlignment(TextAlignment.CENTER);
+		outputTable.getRenderer().setCWC(new CWC_LongestLine());
 		FileWriter output = new FileWriter("output.txt", true);
 		output.append(outputTable.render()).append("\n\n").close();
 		System.out.println(outputTable.render() + "\n\n");
