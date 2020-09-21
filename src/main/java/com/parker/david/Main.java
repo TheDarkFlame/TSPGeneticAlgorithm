@@ -4,7 +4,6 @@ import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
 import de.vandermeer.asciithemes.TA_Grid;
 import de.vandermeer.asciithemes.TA_GridConfig;
-import de.vandermeer.asciithemes.a8.A8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.io.File;
@@ -105,8 +104,6 @@ public class Main {
 				.addCharacterMap(TA_GridConfig.RULESET_NORMAL, ' ', '~', ' ', '~', '~', '~', '~', '~', '~', '~', '~', '~')
 				.addCharacterMap(TA_GridConfig.RULESET_LIGHT, ' ', '-', ' ', '-', '-', '-', '-', '-', '-', '-', '-', '-');
 		outputTable.getContext().setGrid(grid);
-		outputTable.setPaddingLeft(1);
-		outputTable.setPaddingRight(1);
 		outputTable.setTextAlignment(TextAlignment.CENTER);
 		outputTable.getRenderer().setCWC(new CWC_LongestLine());
 		FileWriter output = new FileWriter("output.txt", true);

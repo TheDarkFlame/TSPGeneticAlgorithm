@@ -172,7 +172,7 @@ public class GAPopulationGeneration {
 	public void addToTable(AsciiTable table, CandidateSolution incumbent) {
 
 		//print the header
-		table.addRow("parent", "parent fitness", "offspring parents", "mutation", "final offspring", "final selected", "fitness");
+		table.addRow("parent", "fitness", "offspring parents", "mutation", "final offspring", "final selected", "fitness");
 
 		//for each element of the popluation
 		for (int i = 0; i < parentPopulation.getPopulationSize(); i++) {
