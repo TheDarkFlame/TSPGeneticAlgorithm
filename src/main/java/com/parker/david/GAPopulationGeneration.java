@@ -172,7 +172,7 @@ public class GAPopulationGeneration {
 	public void addToTable(AsciiTable table, CandidateSolution incumbent) {
 
 		//print the header
-		table.addRow("parent", "parent fitness", "final offspring", "offspring parents", "mutation", "final selected", "fitness");
+		table.addRow("parent", "parent fitness", "offspring parents", "mutation", "final offspring", "final selected", "fitness");
 
 		//for each element of the popluation
 		for (int i = 0; i < parentPopulation.getPopulationSize(); i++) {
@@ -196,9 +196,9 @@ public class GAPopulationGeneration {
 			table.addRow(
 					parentPopulation.getSolutions().get(i),
 					parentPopulation.getSolutions().get(i).getFitness(),
-					offspring,
 					parentRecord,
 					mutationRecord,
+					offspring,
 					nextPopulation.getSolutions().get(i),
 					nextPopulation.getSolutions().get(i).getFitness()
 			);
@@ -206,8 +206,9 @@ public class GAPopulationGeneration {
 		table.addLightRule();
 		table.addRow("generation: " + generationNumber,
 				null, "incumbent: " + incumbent,
-				"mean population fitness: " + meanFitness,
-				null, null, "incumbent fitness: " + incumbent.getFitness()
+				"incumbent fitness: " + incumbent.getFitness(),
+				null, "mean population fitness: " + meanFitness,""
+
 		);
 		table.addRule();
 	}
