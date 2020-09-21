@@ -2,9 +2,14 @@ package com.parker.david;
 
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
+import de.vandermeer.asciithemes.TA_Grid;
+import de.vandermeer.asciithemes.TA_GridConfig;
 import de.vandermeer.asciithemes.a8.A8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,7 +17,7 @@ public class Main {
 	/**
 	 * entry point, initialises the cities, and the kicks off the GA
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 		//initialise our cities with the distances to the other cities to set everything up for our algorithm
 		ArrayList<City> cities = new ArrayList<>();
@@ -23,6 +28,9 @@ public class Main {
 		cities.add(new City(cityid++, new ArrayList<>(Arrays.asList(31, 32, 25, 0, 28, 34))));
 		cities.add(new City(cityid++, new ArrayList<>(Arrays.asList(27, 40, 34, 28, 0, 36))));
 		cities.add(new City(cityid++, new ArrayList<>(Arrays.asList(35, 33, 42, 34, 36, 0))));
+
+		//delete old output file
+		new File("output.txt").delete();
 
 		//run the genetic algorithm
 		runGeneticAlgorithm(cities);
@@ -36,7 +44,7 @@ public class Main {
 	 *
 	 * @param cities the set of already created cities for which we want to optimise the TSP route
 	 */
-	public static void runGeneticAlgorithm(ArrayList<City> cities) {
+	public static void runGeneticAlgorithm(ArrayList<City> cities) throws IOException {
 
 		//select our strategies for our genetic algorithm
 		PopulationInitialiser initialiser = new RandomGeneration();//random generation of initial population as initialisation strategy
@@ -52,7 +60,7 @@ public class Main {
 
 		// create our output table
 		AsciiTable outputTable = new AsciiTable();
-		outputTable.addRule();
+		outputTable.addHeavyRule();
 
 		// create our incumbent and stopping criterion tracker
 		CandidateSolution incumbent = generation.getParentPopulation().getBestSolution();
@@ -86,10 +94,23 @@ public class Main {
 
 		}
 
-		//format the table and print it out
+		//print out the incumbent at the end
+		outputTable.addRow(null, null, null, null, null, null, "TSP final best solution & fitness : " + incumbent + " (" + incumbent.getFitness() + ")");
+		outputTable.addHeavyRule();
+
+
+		//format the table, and print to console and output.txt
 		outputTable.getRenderer().setCWC(new CWC_LongestLine());
-		outputTable.getContext().setGrid(A8_Grids.lineDoubleBlocks());
+		TA_Grid grid = TA_Grid.create("an ascii compliant grid")
+				.addCharacterMap(TA_GridConfig.RULESET_HEAVY, ' ', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
+				.addCharacterMap(TA_GridConfig.RULESET_NORMAL, ' ', '~', ' ', '~', '~', '~', '~', '~', '~', '~', '~', '~')
+				.addCharacterMap(TA_GridConfig.RULESET_LIGHT, ' ', '-', ' ', '-', '-', '-', '-', '-', '-', '-', '-', '-');
+		outputTable.getContext().setGrid(grid);
+		outputTable.setPaddingLeft(1);
+		outputTable.setPaddingRight(1);
 		outputTable.setTextAlignment(TextAlignment.CENTER);
-		System.out.println(outputTable.render());
+		FileWriter output = new FileWriter("output.txt", true);
+		output.append(outputTable.render()).append("\n\n").close();
+		System.out.println(outputTable.render() + "\n\n");
 	}
 }
