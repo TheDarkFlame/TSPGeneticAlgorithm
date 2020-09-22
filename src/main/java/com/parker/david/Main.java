@@ -94,7 +94,7 @@ public class Main {
 		}
 
 		//print out the incumbent at the end
-		outputTable.addRow("", "", "TSP final best solution & fitness : ", incumbent + " (" + incumbent.getFitness() + ")","", "", "");
+		outputTable.addRow("", "", "TSP final best solution & fitness : ", incumbent + " (" + incumbent.getFitness() + ")","","", "", "");
 		outputTable.addHeavyRule();
 
 
