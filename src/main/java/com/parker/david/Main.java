@@ -68,8 +68,8 @@ public class Main {
 		//loop until 10 iterations without improved incumbent
 		while (generationSinceImprovedIncumbent <= 10) {
 
-			//take parents and crossover to create offspring. record the results for displaying later
-			generation.setOffspringPopulation(breeder.breed(generation.getParentPopulation()));
+			//take parents and crossover to create 6 offspring. record the results for displaying later
+			generation.setOffspringPopulation(breeder.breed(generation.getParentPopulation(), 6));
 			generation.setFamilyRecords(breeder.getFamilies());
 
 			//take offspring and perform mutation. record the results for displaying later
@@ -94,7 +94,7 @@ public class Main {
 		}
 
 		//print out the incumbent at the end
-		outputTable.addRow("", "", "TSP final best solution & fitness : ", incumbent + " (" + incumbent.getFitness() + ")","","", "", "");
+		outputTable.addRow("", "", "TSP final best solution & fitness : ", incumbent + " (" + incumbent.getFitness() + ")", "", "", "", "");
 		outputTable.addHeavyRule();
 
 

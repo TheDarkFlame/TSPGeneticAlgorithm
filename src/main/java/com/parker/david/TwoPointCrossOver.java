@@ -1,7 +1,6 @@
 package com.parker.david;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -41,26 +40,36 @@ public class TwoPointCrossOver implements PopulationCrossover {
 	 * takes a population and breaks it down into sets of parents. each set of parents generates a set of offspring
 	 * the offspring sets are merged to form an offspring population.
 	 *
-	 * @param parents the population of parents
+	 * @param parents                 the population of parents
+	 * @param offspringPopulationSize the size of the desired offspring population
 	 * @return the population of offspring
 	 */
 	@Override
-	public SolutionPopulation breed(SolutionPopulation parents) {
+	public SolutionPopulation breed(SolutionPopulation parents, int offspringPopulationSize) {
 		// reset families to empty
 		families = new ArrayList<>();
+
+		// set selection method
+		ParentSelector parentSelector = new TournamentSelection(3);
 
 		//create offspring solution set
 		ArrayList<CandidateSolution> offspringSolutions = new ArrayList<>();
 
-		//create a pool of parent solutions to pull from
-		ArrayList<CandidateSolution> parentSolutions = (ArrayList<CandidateSolution>) parents.getSolutions().clone();
+		//create a working(temporary) population of parents
+		SolutionPopulation parentPool = parents.copy();
 
-		//pull 2 solutions from parents, breed them, and put them into the offspring solutions
-		while (!parentSolutions.isEmpty()) {
-			CandidateSolution parent1 = parentSolutions.remove(randomNumberGenerator.nextInt(parentSolutions.size()));
-			CandidateSolution parent2 = parentSolutions.remove(randomNumberGenerator.nextInt(parentSolutions.size()));
-			offspringSolutions.addAll(breedPair(parent1, parent2));//breed and add offspring
-		}
+		//select 2 parents and crossover, repeat until we have offspringPopulationSize parents
+		do {
+			//select 2 parents using parent selection strategy,
+			// remove the parent from the pool of parents available for selection when it is selected
+			CandidateSolution parent1 = parentSelector.getParent(parentPool);
+			parentPool.getSolutions().remove(parent1);
+			CandidateSolution parent2 = parentSelector.getParent(parentPool);
+			parentPool.getSolutions().remove(parent2);
+
+			//breed and add offspring
+			offspringSolutions.addAll(breedPair(parent1, parent2));
+		} while (offspringSolutions.size() / 2 < offspringPopulationSize / 2);
 		return new SolutionPopulation(offspringSolutions);
 	}
 

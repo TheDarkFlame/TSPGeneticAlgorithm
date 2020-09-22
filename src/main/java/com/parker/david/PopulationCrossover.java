@@ -10,10 +10,11 @@ public interface PopulationCrossover {
 	 * the breed function, it takes in a population of parents
 	 * and produces a new population of offspring by some crossover method
 	 *
-	 * @param parents the parent population
+	 * @param parents                 the parent population
+	 * @param offspringPopulationSize the size of the desired offspring population
 	 * @return an offspring population generated from the parent population
 	 */
-	SolutionPopulation breed(SolutionPopulation parents);
+	SolutionPopulation breed(SolutionPopulation parents, int offspringPopulationSize);
 
 	/**
 	 * a bookkeeping method, after the offspring are generated, calling this method yields an array of family record objects

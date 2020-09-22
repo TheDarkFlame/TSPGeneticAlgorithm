@@ -172,34 +172,49 @@ public class GAPopulationGeneration {
 	public void addToTable(AsciiTable table, CandidateSolution incumbent) {
 
 		//print the header
-		table.addRow("parent", "fitness", "offspring parents", "mutation", "final offspring","fitness", "final selected", "fitness");
+		table.addRow("parent", "fitness", "offspring parents", "mutation", "final offspring", "fitness", "final selected", "fitness");
 
 		//for each element of the popluation
 		for (int i = 0; i < parentPopulation.getPopulationSize(); i++) {
-			//grab the final offspring (post crossover and mutation)
-			CandidateSolution offspring = mutatedPopulation.getSolutions().get(i);
 
-			//check if the offspring was mutated
-			String mutationRecord = mutantRecords.stream()
-					.map(mutantRecord -> mutantRecord.unmutatedIfMutatedMatches(offspring))
-					.collect(Collectors.joining(""));
+			//set the defaults offspring strings to empty string
+			String finalOffspring = "";
+			String finalOffspringMutation = "";
+			String finalOffspringFitness = "";
+			String finalOffspringParents = "";
 
-			//if mutation exists, we look for the original unmutated offspring as the lookup
-			CandidateSolution parentRecordLookup = (!mutationRecord.isEmpty()) ? mutantRecords.get(0).getUnmutated() : offspring;
+			//if there is an offspring left to put into this row, overwrite the default offspring strings
+			if ((i < mutatedPopulation.getPopulationSize())) {
+				//grab the final offspring (post crossover and mutation)
+				CandidateSolution offspring = mutatedPopulation.getSolutions().get(i);
 
-			//output get the parents
-			String parentRecord = familyRecords.stream()
-					.map(familyRecord -> familyRecord.parentsIfOffspringMatches(parentRecordLookup))
-					.collect(Collectors.joining(""));
+				//set the offspring string
+				finalOffspring = offspring.toString();
 
+				//set the offspring fitness
+				finalOffspringFitness = "" + offspring.getFitness();
+
+				//check if the offspring was mutated
+				finalOffspringMutation = mutantRecords.stream()
+						.map(mutantRecord -> mutantRecord.unmutatedIfMutatedMatches(offspring))
+						.collect(Collectors.joining(""));
+
+				//if mutation exists, we look for the original unmutated offspring as the lookup
+				CandidateSolution parentRecordLookup = (!finalOffspringMutation.isEmpty()) ? mutantRecords.get(0).getUnmutated() : offspring;
+
+				//output get the parents
+				finalOffspringParents = familyRecords.stream()
+						.map(familyRecord -> familyRecord.parentsIfOffspringMatches(parentRecordLookup))
+						.collect(Collectors.joining(""));
+			}
 			//add a row to the table
 			table.addRow(
 					parentPopulation.getSolutions().get(i),
 					parentPopulation.getSolutions().get(i).getFitness(),
-					parentRecord,
-					mutationRecord,
-					offspring,
-					offspring.getFitness(),
+					finalOffspringParents,
+					finalOffspringMutation,
+					finalOffspring,
+					finalOffspringFitness,
 					nextPopulation.getSolutions().get(i),
 					nextPopulation.getSolutions().get(i).getFitness()
 			);
@@ -208,7 +223,7 @@ public class GAPopulationGeneration {
 		table.addRow("generation: " + generationNumber,
 				"", "incumbent: " + incumbent,
 				"incumbent fitness: " + incumbent.getFitness()
-				, "mean fitness: " + meanFitness, "", "",""
+				, "mean fitness: " + meanFitness, "", "", ""
 
 		);
 		table.addRule();
